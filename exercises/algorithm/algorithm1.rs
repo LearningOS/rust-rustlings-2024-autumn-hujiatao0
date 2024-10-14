@@ -2,13 +2,12 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
 use std::vec::*;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, PartialOrd, Clone)]
 struct Node<T> {
     val: T,
     next: Option<NonNull<Node<T>>>,
@@ -22,20 +21,20 @@ impl<T> Node<T> {
         }
     }
 }
-#[derive(Debug)]
+#[derive(Debug, PartialEq, PartialOrd, Clone)]
 struct LinkedList<T> {
     length: u32,
     start: Option<NonNull<Node<T>>>,
     end: Option<NonNull<Node<T>>>,
 }
 
-impl<T> Default for LinkedList<T> {
+impl<T> Default for LinkedList<T> where T: PartialOrd + Clone {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl<T> LinkedList<T> {
+impl<T> LinkedList<T> where T: PartialOrd + Clone {
     pub fn new() -> Self {
         Self {
             length: 0,
@@ -56,11 +55,11 @@ impl<T> LinkedList<T> {
         self.length += 1;
     }
 
-    pub fn get(&mut self, index: i32) -> Option<&T> {
+    pub fn get(&self, index: i32) -> Option<&T> {
         self.get_ith_node(self.start, index)
     }
 
-    fn get_ith_node(&mut self, node: Option<NonNull<Node<T>>>, index: i32) -> Option<&T> {
+    fn get_ith_node(&self, node: Option<NonNull<Node<T>>>, index: i32) -> Option<&T> {
         match node {
             None => None,
             Some(next_ptr) => match index {
@@ -72,11 +71,31 @@ impl<T> LinkedList<T> {
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
 	{
 		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+        let mut i = 0;
+        let mut j = 0;
+        let mut list_merge = LinkedList::<T>::new();
+        while i < list_a.length || j < list_b.length {
+            if i < list_a.length && j < list_b.length {
+                let a = list_a.get(i as i32).unwrap();
+                let b = list_b.get(j as i32).unwrap();
+                if a < b {
+                    list_merge.add((*a).clone());
+                    i += 1;
+                } else {
+                    list_merge.add((*b).clone());
+                    j += 1;
+                }
+            } else if i < list_a.length {
+                let a = list_a.get(i as i32).unwrap();
+                list_merge.add((*a).clone());
+                i += 1;
+            } else {
+                let b = list_b.get(j as i32).unwrap();
+                list_merge.add((*b).clone());
+                j += 1;
+            }
         }
+        list_merge
 	}
 }
 
