@@ -71,7 +71,7 @@ pub trait Graph {
             }
         }
 
-        edge
+        edges
     }
 }
 #[cfg(test)]
