@@ -1281,3 +1281,9 @@ name = "algorithm10"
 path = "exercises/algorithm/algorithm10.rs"
 mode = "test"
 hint = "No hints this time!"
+
+[[exercises]]
+name = "algorithm11"
+path = "exercises/algorithm/algorithm11.rs"
+mode = "test"
+hint = "No hints this time!"
