@@ -70,8 +70,8 @@ pub trait Graph {
                 edges.push((from_node, to_node, *weight));
             }
         }
-        
-        edges
+
+        edge
     }
 }
 #[cfg(test)]
