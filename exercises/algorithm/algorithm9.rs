@@ -2,7 +2,6 @@
 	heap
 	This question requires you to implement a binary heap function
 */
-// I AM NOT DONE
 
 use std::cmp::Ord;
 use std::default::Default;
@@ -37,7 +36,19 @@ where
     }
 
     pub fn add(&mut self, value: T) {
-        //TODO
+        self.count += 1;
+        self.items.push(value);
+        let mut len = self.items.len();
+        self.items.swap(self.count, len - 1);
+        let mut idx = self.count;
+        loop {
+            let parent_idx = self.parent_idx(idx);
+            if parent_idx == 0 || (self.comparator)(&self.items[parent_idx], &self.items[idx]) {
+                break;
+            }
+            self.items.swap(parent_idx, idx);
+            idx = parent_idx;
+        }
     }
 
     fn parent_idx(&self, idx: usize) -> usize {
@@ -58,7 +69,25 @@ where
 
     fn smallest_child_idx(&self, idx: usize) -> usize {
         //TODO
-		0
+        let left = self.left_child_idx(idx);
+        let right = self.right_child_idx(idx);
+        if right > self.count {
+            left
+        } else if (self.comparator)(&self.items[left], &self.items[right]) {
+            left
+        } else {
+            right
+        }
+    }
+
+    pub fn heapify(&mut self, idx: usize) {
+        if self.children_present(idx) {
+            let smallest_child_idx = self.smallest_child_idx(idx);
+            if (self.comparator)(&self.items[smallest_child_idx], &self.items[idx]) {
+                self.items.swap(smallest_child_idx, idx);
+                self.heapify(smallest_child_idx);
+            }
+        }
     }
 }
 
@@ -79,13 +108,19 @@ where
 
 impl<T> Iterator for Heap<T>
 where
-    T: Default,
+    T: Default + Copy,
 {
     type Item = T;
 
     fn next(&mut self) -> Option<T> {
-        //TODO
-		None
+        if self.is_empty() {
+            return None;
+        }
+        let result = self.items[1];
+        self.items[1] = self.items[self.count];
+        self.count -= 1;
+        self.heapify(1);
+        Some(result)
     }
 }
 
