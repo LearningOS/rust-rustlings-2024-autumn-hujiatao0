@@ -2,9 +2,7 @@
 	bfs
 	This problem requires you to implement a basic BFS algorithm
 */
-
-//I AM NOT DONE
-use std::collections::VecDeque;
+use std::collections::{vec_deque, VecDeque};
 
 // Define a graph
 struct Graph {
@@ -29,8 +27,22 @@ impl Graph {
     fn bfs_with_return(&self, start: usize) -> Vec<usize> {
         
 		//TODO
-
+        let mut vec_deque = VecDeque::new();
+        let mut visited = vec![false; self.adj.len()];
+        vec_deque.push_back(start);
+        visited[start] = true;
         let mut visit_order = vec![];
+        while !vec_deque.is_empty() {
+            let node = vec_deque.pop_front().unwrap();
+            visit_order.push(node);
+            for &neighbour in &self.adj[node] {
+                if visited[neighbour] {
+                    continue;
+                }
+                vec_deque.push_back(neighbour);
+                visited[neighbour] = true;
+            }
+        }
         visit_order
     }
 }
